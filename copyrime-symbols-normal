@@ -14,7 +14,7 @@ def copy_normal(input, output):
             line = line.decode("utf-8")
             i = line.index(" ")
             prefix = line[:i]
-            suffix = line[i+1:]
+            suffix = line[i+1:-1]
             [name, name_t] = prefix.split("\t")
             # 如果出现相同尝试把第一个词语转为简体
             if name == name_t:
@@ -25,10 +25,11 @@ def copy_normal(input, output):
             if name != name_t:
                 names.append(name_t)
             for name in names:
+                ss = set(suffix.split(" "))
                 if name in items:
-                    items[name].add(suffix[:-1])
+                    items[name].union(ss)
                 else:
-                    items[name] = set([suffix[:-1]])
+                    items[name] = ss
     with open(output, "wb") as output_f:
         keys = list(items.keys())
         keys.sort()

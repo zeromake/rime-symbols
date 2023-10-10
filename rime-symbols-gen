@@ -15,16 +15,8 @@ def genTextTypeCategory(name, ranges):
     t_name = s2t.convert(name)
 
     text = ''
-
-    # 繁体一遍
-    if name != t_name:
-        text += t_name + '\t' + t_name + ' '
-        for r in ranges:
-            text += strSpaceRange_1(r[0], r[1])
-        text += '\n'
-
-    # 简体一遍
-    text += name + '\t' + name + ' '
+    # 简体繁体
+    text += name + '\t' + t_name + ' '
     for r in ranges:
         text += strSpaceRange_1(r[0], r[1])
     text += '\n'
@@ -33,15 +25,9 @@ def genTextTypeCategory(name, ranges):
 
 def genTextTypeWord(name, char):
     t_name = s2t.convert(name)
-
     text = ''
-
-    # 繁体一遍
-    if name != t_name:
-        text += t_name + '\t' + t_name + ' ' + char + '\n'
-
-    # 简体一遍
-    text += name + '\t' + name + ' ' + char + '\n'
+    # 简体繁体合一
+    text += name + '\t' + t_name + ' ' + char + '\n'
     return text
 
 def genSymbolCategory(file_name):

@@ -8,22 +8,33 @@ import opencc
 t2s = opencc.OpenCC('t2s.json')
 
 def copy_normal(input, output):
+    items = {}
     with open(input, "rb") as input_f:
-        with open(output, "wb") as output_f:
-            for line in input_f:
-                line = line.decode("utf-8")
-                i = line.index(" ")
-                prefix = line[:i]
-                suffix = line[i:]
-                [name, name_t] = prefix.split("\t")
-                # 如果出现相同尝试把第一个词语转为简体
-                if name == name_t:
-                    name = t2s.convert(name_t)
-                # 写入简体
-                output_f.write(("{}\t{}{}".format(name, name, suffix)).encode("utf-8"))
-                # 有繁体与简体不同才写入
-                if name != name_t:
-                    output_f.write(("{}\t{}{}".format(name_t, name_t, suffix)).encode("utf-8"))
+        for line in input_f:
+            line = line.decode("utf-8")
+            i = line.index(" ")
+            prefix = line[:i]
+            suffix = line[i+1:]
+            [name, name_t] = prefix.split("\t")
+            # 如果出现相同尝试把第一个词语转为简体
+            if name == name_t:
+                name = t2s.convert(name_t)
+            # 写入简体
+            names = [name]
+            # 繁体
+            if name != name_t:
+                names.append(name_t)
+            for name in names:
+                if name in items:
+                    items[name].add(suffix[:-1])
+                else:
+                    items[name] = set([suffix[:-1]])
+    with open(output, "wb") as output_f:
+        keys = list(items.keys())
+        keys.sort()
+        for name in keys:
+            suffixs = items[name]
+            output_f.write(("{}\t{} {}\n".format(name, name, "".join(list(suffixs)))).encode("utf-8"))
 
 def main():
     input_dir = sys.argv[1]

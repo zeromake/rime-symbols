@@ -34,7 +34,7 @@ def copy_normal(input, output):
         keys.sort()
         for name in keys:
             suffixs = items[name]
-            output_f.write(("{}\t{} {}\n".format(name, name, "".join(list(suffixs)))).encode("utf-8"))
+            output_f.write(("{}\t{} {}\n".format(name, name, " ".join(list(suffixs)))).encode("utf-8"))
 
 def main():
     input_dir = sys.argv[1]
